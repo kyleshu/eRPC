@@ -60,7 +60,7 @@ static Transport::mem_reg_info ibv_reg_mr_wrapper(struct ibv_pd *pd, void *buf,
   rt_assert(mr != nullptr, "Failed to register mr.");
 
   char* end = static_cast<char*>(buf) + size;
-  printf("registered memory region: %p - %p", static_cast<void*>(buf), static_cast<void*>(end));
+  printf("registered memory region: %p - %p\n", static_cast<void*>(buf), static_cast<void*>(end));
 
   ERPC_INFO("Registered %zu MB (lkey = %u)\n", size / MB(1), mr->lkey);
   return Transport::mem_reg_info(mr, mr->lkey);
