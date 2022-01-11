@@ -141,7 +141,7 @@ class Rpc {
 
     // This function avoids division for small data sizes
     size_t max_num_pkts = data_size_to_num_pkts(max_data_size);
-    printf("alloc MsgBuffer\n");
+
     lock_cond(&huge_alloc_lock_);
     Buffer buffer =
         huge_alloc_->alloc(max_data_size + (max_num_pkts * sizeof(pkthdr_t)));
@@ -181,7 +181,6 @@ class Rpc {
   /// Free a MsgBuffer created by alloc_msg_buffer(). Safe to call from
   /// background threads (TS).
   inline void free_msg_buffer(MsgBuffer msg_buffer) {
-    printf("free MsgBuffer\n");
     lock_cond(&huge_alloc_lock_);
     huge_alloc_->free_buf(msg_buffer.buffer_);
     unlock_cond(&huge_alloc_lock_);
