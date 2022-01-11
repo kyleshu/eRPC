@@ -915,12 +915,22 @@ class Rpc {
 
   /// Lock the mutex if the Rpc is accessible from multiple threads
   inline void lock_cond(std::mutex *mutex) {
-    if (unlikely(multi_threaded_)) mutex->lock();
+    printf("lock: %d\n", multi_threaded_);
+    if (unlikely(multi_threaded_)) {
+      printf("lock start\n");
+      mutex->lock();
+      printf("lock end\n");
+    }
   }
 
   /// Unlock the mutex if the Rpc is accessible from multiple threads
   inline void unlock_cond(std::mutex *mutex) {
-    if (unlikely(multi_threaded_)) mutex->unlock();
+    printf("unlock: %d\n", multi_threaded_);
+    if (unlikely(multi_threaded_)) {
+      printf("unlock start\n");
+      mutex->unlock();
+      printf("unlock end\n");
+    }
   }
 
   /**
