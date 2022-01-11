@@ -141,7 +141,7 @@ class Rpc {
 
     // This function avoids division for small data sizes
     size_t max_num_pkts = data_size_to_num_pkts(max_data_size);
-
+    printf("alloc MsgBuffer\n");
     lock_cond(&huge_alloc_lock_);
     Buffer buffer =
         huge_alloc_->alloc(max_data_size + (max_num_pkts * sizeof(pkthdr_t)));
@@ -181,6 +181,7 @@ class Rpc {
   /// Free a MsgBuffer created by alloc_msg_buffer(). Safe to call from
   /// background threads (TS).
   inline void free_msg_buffer(MsgBuffer msg_buffer) {
+    printf("free MsgBuffer\n");
     lock_cond(&huge_alloc_lock_);
     huge_alloc_->free_buf(msg_buffer.buffer_);
     unlock_cond(&huge_alloc_lock_);
@@ -915,21 +916,15 @@ class Rpc {
 
   /// Lock the mutex if the Rpc is accessible from multiple threads
   inline void lock_cond(std::mutex *mutex) {
-    printf("lock: %d\n", multi_threaded_);
     if (unlikely(multi_threaded_)) {
-      printf("lock start\n");
       mutex->lock();
-      printf("lock end\n");
     }
   }
 
   /// Unlock the mutex if the Rpc is accessible from multiple threads
   inline void unlock_cond(std::mutex *mutex) {
-    printf("unlock: %d\n", multi_threaded_);
     if (unlikely(multi_threaded_)) {
-      printf("unlock start\n");
       mutex->unlock();
-      printf("unlock end\n");
     }
   }
 
