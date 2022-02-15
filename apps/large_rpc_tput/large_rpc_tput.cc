@@ -43,6 +43,12 @@ void send_req(AppContext *c, size_t msgbuf_idx) {
            c->thread_id_, msgbuf_idx);
   }
 
+  char* buf = reinterpret_cast<char *>(req_msgbuf.buf_);
+  cs_message_t* cs_msg = (cs_message_t*) buf;
+  cs_msg->type = 1;
+  cs_msg->offset = 0;
+  cs_msg->length = 128*1024;
+
   c->req_ts[msgbuf_idx] = erpc::rdtsc();
   c->rpc_->enqueue_request(c->session_num_vec_[0], kAppReqType, &req_msgbuf,
                            &c->resp_msgbuf[msgbuf_idx], app_cont_func,
@@ -91,16 +97,16 @@ void app_cont_func(void *_context, void *_tag) {
   erpc::rt_assert(resp_msgbuf.get_data_size() == FLAGS_resp_size,
                   "Invalid response size");
 
-  if (kAppClientCheckResp) {
-    bool match = true;
-    // Check all response cachelines (checking every byte is slow)
-    for (size_t i = 0; i < FLAGS_resp_size; i += 64) {
-      if (resp_msgbuf.buf_[i] != kAppDataByte) match = false;
-    }
-    erpc::rt_assert(match, "Invalid resp data");
-  } else {
-    erpc::rt_assert(resp_msgbuf.buf_[0] == kAppDataByte, "Invalid resp data");
-  }
+  // if (kAppClientCheckResp) {
+  //   bool match = true;
+  //   // Check all response cachelines (checking every byte is slow)
+  //   for (size_t i = 0; i < FLAGS_resp_size; i += 64) {
+  //     if (resp_msgbuf.buf_[i] != kAppDataByte) match = false;
+  //   }
+  //   erpc::rt_assert(match, "Invalid resp data");
+  // } else {
+  //   erpc::rt_assert(resp_msgbuf.buf_[0] == kAppDataByte, "Invalid resp data");
+  // }
 
   c->stat_rx_bytes_tot += FLAGS_resp_size;
 

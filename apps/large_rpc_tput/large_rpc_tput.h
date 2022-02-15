@@ -8,9 +8,24 @@
 #include "util/autorun_helpers.h"
 #include "util/numautils.h"
 
-static constexpr size_t kAppReqType = 1;
-static constexpr uint8_t kAppDataByte = 3;  // Data transferred in req & resp
+static constexpr size_t kAppReqType = 3;
+static constexpr uint8_t kAppDataByte = 0;  // Data transferred in req & resp
 static constexpr size_t kAppMaxConcurrency = 32;  // Outstanding reqs per thread
+
+struct cs_message_t {
+    bool success;
+    uint8_t fwd_num;
+    uint8_t type;
+    uint8_t fwd_type;
+    uint8_t data_index;
+    uint8_t fwd_data_index;
+    int next_index;
+    int next_index2;
+    uint64_t offset;
+    uint64_t length;
+    uint64_t fwd_offset;
+    uint64_t fwd_length;
+};
 
 // Globals
 volatile sig_atomic_t ctrl_c_pressed = 0;
