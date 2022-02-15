@@ -201,7 +201,7 @@ static void common_resolve_phy_port(uint8_t phy_port, size_t mtu,
           default: rt_assert(false, "Invalid active speed");
         };
         printf(
-            "gbps_per_lane %d\n",
+            "gbps_per_lane %.1f\n",
             gbps_per_lane);
 
         size_t num_lanes = SIZE_MAX;
