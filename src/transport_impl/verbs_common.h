@@ -200,9 +200,6 @@ static void common_resolve_phy_port(uint8_t phy_port, size_t mtu,
           case 64: gbps_per_lane = 50.0; break;
           default: rt_assert(false, "Invalid active speed");
         };
-        printf(
-            "gbps_per_lane %.1f\n",
-            gbps_per_lane);
 
         size_t num_lanes = SIZE_MAX;
         switch (port_attr.active_width) {
@@ -212,9 +209,6 @@ static void common_resolve_phy_port(uint8_t phy_port, size_t mtu,
           case 8: num_lanes = 12; break;
           default: rt_assert(false, "Invalid active width");
         };
-        printf(
-            "num_lanes %lu\n",
-            num_lanes);
 
         double total_gbps = num_lanes * gbps_per_lane;
         resolve.bandwidth = total_gbps * (1000 * 1000 * 1000) / 8.0;
