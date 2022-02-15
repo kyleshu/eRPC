@@ -10,7 +10,7 @@
 
 static constexpr size_t kAppReqType = 3;
 static constexpr uint8_t kAppDataByte = 0;  // Data transferred in req & resp
-static constexpr size_t kAppMaxConcurrency = 1;  // Outstanding reqs per thread
+static constexpr size_t kAppMaxConcurrency = 32;  // Outstanding reqs per thread
 
 struct cs_message_t {
     bool success;
