@@ -216,12 +216,12 @@ static void common_resolve_phy_port(uint8_t phy_port, size_t mtu,
             "num_lanes %lu\n",
             num_lanes);
 
+        double total_gbps = num_lanes * gbps_per_lane;
+        resolve.bandwidth = total_gbps * (1000 * 1000 * 1000) / 8.0;
+
         printf(
             "Port %u resolved to device %s, port %u. Speed = %.2f Gbps.\n",
             phy_port, ib_ctx->device->name, port_i, total_gbps);
-
-        double total_gbps = num_lanes * gbps_per_lane;
-        resolve.bandwidth = total_gbps * (1000 * 1000 * 1000) / 8.0;
 
         ERPC_INFO(
             "Port %u resolved to device %s, port %u. Speed = %.2f Gbps.\n",
