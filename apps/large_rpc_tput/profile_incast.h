@@ -22,7 +22,7 @@ void connect_sessions_func_incast(AppContext *c) {
       "large_rpc_tput: Thread %zu: Creating 1 session to proc 0, thread %zu, uri %s.\n",
       c->thread_id_, rem_tid, erpc::get_uri_for_process(0).c_str());
   printf(
-      "large_rpc_tput: RPC Bandwidth %.1f\n",
+      "large_rpc_tput: RPC Bandwidth %lu\n",
       c->rpc_->get_bandwidth());
 
   c->session_num_vec_[0] =
