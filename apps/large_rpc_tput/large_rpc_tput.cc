@@ -44,7 +44,7 @@ void send_req(AppContext *c, size_t msgbuf_idx) {
   }
 
   char* buf = reinterpret_cast<char *>(req_msgbuf.buf_);
-  cs_message_t* cs_msg = (cs_message_t*) buf;
+  cs_message_t* cs_msg = reinterpret_cast<cs_message_t*> (buf);
   cs_msg->type = 1;
   cs_msg->offset = 0;
   cs_msg->length = 128*1024;
