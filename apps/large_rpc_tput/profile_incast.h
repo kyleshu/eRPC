@@ -19,8 +19,8 @@ void connect_sessions_func_incast(AppContext *c) {
   c->session_num_vec_.resize(1);
 
   printf(
-      "large_rpc_tput: Thread %zu: Creating 1 session to proc 0, thread %zu.\n",
-      c->thread_id_, rem_tid);
+      "large_rpc_tput: Thread %zu: Creating 1 session to proc 0, thread %zu, uri %s.\n",
+      c->thread_id_, rem_tid, erpc::get_uri_for_process(0).c_str());
 
   c->session_num_vec_[0] =
       c->rpc_->create_session(erpc::get_uri_for_process(0), rem_tid);
