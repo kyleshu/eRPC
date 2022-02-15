@@ -47,7 +47,7 @@ void send_req(AppContext *c, size_t msgbuf_idx) {
   cs_message_t* cs_msg = reinterpret_cast<cs_message_t*> (buf);
   cs_msg->type = 1;
   cs_msg->offset = 0;
-  cs_msg->length = 128*1024;
+  cs_msg->length = 256;
 
   c->req_ts[msgbuf_idx] = erpc::rdtsc();
   c->rpc_->enqueue_request(c->session_num_vec_[0], kAppReqType, &req_msgbuf,
