@@ -27,6 +27,7 @@ static constexpr bool kAppVerbose = false;
 static constexpr bool kAppClientMemsetReq = false;   // Fill entire request
 static constexpr bool kAppServerMemsetResp = false;  // Fill entire response
 static constexpr bool kAppClientCheckResp = false;   // Check entire response
+static uint64_t req_cnt = 0;
 
 // Profile-specifc session connection function
 std::function<void(AppContext *)> connect_sessions_func = nullptr;
@@ -76,6 +77,7 @@ void req_handler(erpc::ReqHandle *req_handle, void *_context) {
 
   c->stat_rx_bytes_tot += FLAGS_req_size;
   c->stat_tx_bytes_tot += FLAGS_resp_size;
+  req_cnt++;
 
   c->rpc_->enqueue_response(req_handle, &resp_msgbuf);
 }
@@ -144,6 +146,7 @@ void thread_func(size_t thread_id, app_stats_t *app_stats, erpc::Nexus *nexus) {
   // Create the session. Some threads may not create any sessions, and therefore
   // not run the event loop required for other threads to connect them. This
   // is OK because all threads will run the event loop below.
+  sleep(30);
   connect_sessions_func(&c);
 
   if (c.session_num_vec_.size() > 0) {
@@ -197,15 +200,16 @@ void thread_func(size_t thread_id, app_stats_t *app_stats, erpc::Nexus *nexus) {
         "large_rpc_tput: Thread %zu: Tput {RX %.2f (%zu), TX %.2f (%zu)} "
         "Gbps (IOPS). Retransmissions %zu. Packet RTTs: {%.1f, %.1f} us. "
         "RPC latency {%.1f 50th, %.1f 99th, %.1f 99.9th}. Timely rate %.1f "
-        "Gbps. Credits %zu (best = 32).\n",
+        "Gbps. Credits %zu (best = 32). req_cnt %zu\n",
         c.thread_id_, stats.rx_gbps, c.stat_rx_bytes_tot / FLAGS_resp_size,
         stats.tx_gbps, c.stat_tx_bytes_tot / FLAGS_req_size, stats.re_tx,
         stats.rtt_50_us, stats.rtt_99_us, stats.rpc_50_us, stats.rpc_99_us,
-        stats.rpc_999_us, timely_0->get_rate_gbps(), erpc::kSessionCredits);
+        stats.rpc_999_us, timely_0->get_rate_gbps(), erpc::kSessionCredits, req_cnt);
 
     // Reset stats for next iteration
     c.stat_rx_bytes_tot = 0;
     c.stat_tx_bytes_tot = 0;
+    req_cnt = 0;
     c.rpc_->reset_num_re_tx(c.session_num_vec_[0]);
     c.lat_vec.clear();
     timely_0->reset_rtt_stats();
